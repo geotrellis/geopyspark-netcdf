@@ -10,14 +10,15 @@ JAR = backend/gddp/target/scala-2.11/gddp-assembly-$(VERSION).jar
 
 .PHONY: install
 
-install: $(JAR)
+install:
 	rm -rf build/
-	cp -f $< geopyspark-netcdf/jars/
+	cp -f $< build/lib/geopyspark-netcdf/jars/
 	$(PIP3) install --upgrade --user .
 
 $(WHEEL): $(JAR)
 	rm -rf build/
-	cp -f $< geopyspark-netcdf/jars/
+	mkdir -p build/lib/geopyspark-netcdf/jars/
+	cp -f $< build/lib/geopyspark-netcdf/jars/
 	$(PYTHON3) setup.py bdist_wheel
 
 /tmp/%: archives/%
