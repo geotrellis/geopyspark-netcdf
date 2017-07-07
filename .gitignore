@@ -1,0 +1,6 @@
+build/
+dist/
+*.egg-info/
+geopyspark-netcdf/jars/*.jar
+target/
+thredds-feature-s3-hdfs/

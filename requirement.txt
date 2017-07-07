@@ -1,0 +1,4 @@
+geopyspark==0.1.0
+pytest>=3.06
+setuptools
+wheel
