@@ -19,6 +19,7 @@ setup_args = dict(
         'geopyspark-netcdf',
         'geopyspark-netcdf.jars',
     ],
+    include_package_data=True
 )
 
 if __name__ == "__main__":
