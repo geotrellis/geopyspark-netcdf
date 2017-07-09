@@ -12,7 +12,6 @@ JAR = backend/gddp/target/scala-2.11/gddp-assembly-$(VERSION).jar
 
 install:
 	rm -rf build/
-	cp -f $< build/lib/geopyspark-netcdf/jars/
 	$(PIP3) install --upgrade --user .
 
 $(WHEEL): $(JAR)
@@ -35,7 +34,7 @@ archives/s3+hdfs.zip:
 	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
 
 thredds-feature-s3-hdfs: archives/s3+hdfs.zip
-	unzip -q $<
+	unzip -qu $<
 
 archives/$(CDM_JAR): thredds-feature-s3-hdfs
 	(cd $< ; ./gradlew assemble)
@@ -57,3 +56,5 @@ clean:
 cleaner: clean
 	rm -f archives/*
 	rm -rf thredds-feature-s3-hdfs/
+
+cleanest: cleaner
