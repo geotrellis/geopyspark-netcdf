@@ -6,7 +6,7 @@ if sys.version_info < (3, 3):
     sys.exit("GeoPySpark does not support Python versions before 3.3")
 
 setup_args = dict(
-    name='geopyspark-netcdf',
+    name='geopyspark_netcdf',
     version='0.1.0',
     author='James McClain',
     author_email='jmcclain@azavea.com',
@@ -16,8 +16,8 @@ setup_args = dict(
         'geopyspark==0.1.0',
     ],
     packages=[
-        'geopyspark-netcdf',
-        'geopyspark-netcdf.jars',
+        'geopyspark_netcdf',
+        'geopyspark_netcdf.jars',
     ],
     include_package_data=True
 )
