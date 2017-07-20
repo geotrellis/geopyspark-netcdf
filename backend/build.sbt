@@ -39,7 +39,6 @@ lazy val commonSettings = Seq(
   },
   shellPrompt := { s => Project.extract(s).currentProject.id + " > " },
   resolvers  ++= Seq(
-    "Location Tech GeoTrellis Snapshots" at "https://repo.locationtech.org/content/repositories/geotrellis-snapshots",
     Resolver.mavenLocal
   )
 )
