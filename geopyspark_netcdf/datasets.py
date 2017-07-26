@@ -4,7 +4,7 @@ import numpy as np
 
 from pyspark import SparkContext
 from shapely.geometry import Point
-from geopyspark.geotrellis.constants import LayerType, LayoutScheme
+from geopyspark.geotrellis.constants import LayerType
 from geopyspark.geotrellis import SpaceTimeKey, Extent, Tile
 from geopyspark.geotrellis.layer import TiledRasterLayer
 
