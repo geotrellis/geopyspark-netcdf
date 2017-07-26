@@ -1,6 +1,6 @@
 package geopyspark.netcdf.datasets
 
-import geopyspark.geotrellis.{SpatialTiledRasterRDD, TemporalTiledRasterRDD}
+import geopyspark.geotrellis.{SpatialTiledRasterLayer, TemporalTiledRasterLayer}
 
 import geotrellis.proj4.LatLng
 import geotrellis.raster._
@@ -126,7 +126,7 @@ object Gddp {
       SpaceTimeKey(0, 0, days.get(days.size-1)))
     val metadata: TileLayerMetadata[SpaceTimeKey] = TileLayerMetadata(ct, ld, ld.extent, crs, bounds)
 
-    TemporalTiledRasterRDD(None, ContextRDD(rdd, metadata))
+    TemporalTiledRasterLayer(None, ContextRDD(rdd, metadata))
   }
 
   def display_raster(
@@ -180,7 +180,7 @@ object Gddp {
       SpatialKey(0, 0))
     val metadata: TileLayerMetadata[SpatialKey] = TileLayerMetadata(ct, ld, ld.extent, crs, bounds)
 
-    SpatialTiledRasterRDD(None, ContextRDD(rdd, metadata))
+    SpatialTiledRasterLayer(None, ContextRDD(rdd, metadata))
   }
 
   def samples(
