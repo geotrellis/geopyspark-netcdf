@@ -13,7 +13,7 @@ setup_args = dict(
     download_url='http://github.com/geotrellis/geopyspark-netcdf',
     description='NetCDF capability for geopyspark',
     install_requires=[
-        'geopyspark==0.2.0rc2',
+        'geopyspark==0.2.0rc4',
     ],
     packages=[
         'geopyspark_netcdf',
