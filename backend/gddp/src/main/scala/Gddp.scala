@@ -87,7 +87,6 @@ object Gddp {
     netcdfUri: String,
     extent: java.util.ArrayList[Double],
     days: java.util.ArrayList[Int],
-    baseInstant: Int,
     sc: SparkContext
   ) = {
     val List(xSliceStart, xSliceStop, ySliceStart, ySliceStop) = extentToIndices(extent)
@@ -107,7 +106,7 @@ object Gddp {
           val ucarType = tasmin.getDataType()
 
           itr.map({ t =>
-            val key = SpaceTimeKey(0, 0, t*millisPerDay + baseInstant)
+            val key = SpaceTimeKey(0, 0, t)
             val array = tasmin
               .read(s"$t,$ySliceStart:$ySliceStop,$xSliceStart:$xSliceStop")
               .get1DJavaArray(ucarType).asInstanceOf[Array[Float]]
