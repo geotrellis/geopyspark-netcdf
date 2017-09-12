@@ -7,7 +7,7 @@ if sys.version_info < (3, 3):
 
 setup_args = dict(
     name='geopyspark_netcdf',
-    version='0.2.0',
+    version='0.2.2',
     author='James McClain',
     author_email='jmcclain@azavea.com',
     download_url='http://github.com/geotrellis/geopyspark-netcdf',
