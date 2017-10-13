@@ -8,19 +8,22 @@ import geotrellis.spark._
 import geotrellis.spark.TileLayerMetadata
 import geotrellis.spark.tiling.LayoutDefinition
 import geotrellis.vector._
+import geotrellis.util._
 
 import org.apache.spark.api.java.JavaRDD
 import org.apache.spark.rdd.RDD
 import org.apache.spark.SparkContext
 
 import java.io._
+import java.time.{LocalDateTime, ZonedDateTime, ZoneId}
 
 import ucar.nc2._
 
 import scala.collection.JavaConversions._
+import scala.util.matching.Regex
 
 
-object Gddp {
+object Gddp extends LazyLogging {
 
   private val millisPerDay: Int = 24 * 60 * 60 * 1000
 
@@ -93,10 +96,29 @@ object Gddp {
     val xWidth = xSliceStop - xSliceStart + 1
     val yWidth = ySliceStop - ySliceStart + 1
 
+    val pattern = """(?<=_)2[0-1][0-9][0-9](?=.)""".r
+
+    val baseZonedTime =
+      pattern.findFirstIn(netcdfUri) match {
+        case Some(year) =>
+          val baseLocalTime = LocalDateTime.of(year.toInt, 1, 1, 0, 0)
+          val zone = ZoneId.of("UTC")
+          Some(ZonedDateTime.of(baseLocalTime, zone))
+        case None =>
+          logger.warn(s"Could not determine year from the given URI: $netcdfUri")
+          None
+      }
+
     val ncfile = open(netcdfUri)
     val tasmin = ncfile.getVariables().get(3)
     val attribs = tasmin.getAttributes()
     val nodata = attribs.get(0).getValues().getFloat(0)
+
+    val keyMaker: Long => SpaceTimeKey =
+      baseZonedTime match {
+        case Some(time) => (days: Long) => SpaceTimeKey(0, 0, time.plusDays(days))
+        case None => (days: Long) => SpaceTimeKey(0, 0, days)
+      }
 
     val rdd: RDD[(SpaceTimeKey, MultibandTile)] =
       sc.parallelize(days.toList)
@@ -106,7 +128,7 @@ object Gddp {
           val ucarType = tasmin.getDataType()
 
           itr.map({ t =>
-            val key = SpaceTimeKey(0, 0, t)
+            val key = keyMaker(t)
             val array = tasmin
               .read(s"$t,$ySliceStart:$ySliceStop,$xSliceStart:$xSliceStop")
               .get1DJavaArray(ucarType).asInstanceOf[Array[Float]]
@@ -120,9 +142,20 @@ object Gddp {
     val tl = TileLayout(1, 1, xWidth, yWidth)
     val ld = LayoutDefinition(Extent(extent.get(0), extent.get(1), extent.get(2), extent.get(3)), tl)
     val crs = LatLng
-    val bounds = KeyBounds[SpaceTimeKey](
-      SpaceTimeKey(0, 0, days.get(0)),
-      SpaceTimeKey(0, 0, days.get(days.size-1)))
+    val bounds =
+      baseZonedTime match {
+        case Some(time) =>
+          KeyBounds[SpaceTimeKey](
+            SpaceTimeKey(0, 0, time.plusDays(days.get(0))),
+            SpaceTimeKey(0, 0, time.plusDays(days.get(days.size - 1)))
+          )
+        case None =>
+          KeyBounds[SpaceTimeKey](
+            SpaceTimeKey(0, 0, days.get(0)),
+            SpaceTimeKey(0, 0, days.get(days.size - 1))
+          )
+      }
+
     val metadata: TileLayerMetadata[SpaceTimeKey] = TileLayerMetadata(ct, ld, ld.extent, crs, bounds)
 
     TemporalTiledRasterLayer(None, ContextRDD(rdd, metadata))
