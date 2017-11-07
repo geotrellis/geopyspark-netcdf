@@ -15,7 +15,7 @@ class Gddp(object):
     y_offset = (-90.0 + 1/8.0)
 
     @classmethod
-    def rdd_of_rasters(cls, uri, extent, days):
+    def rdd_of_rasters(cls, uri, extent, days, num_partitions=None):
 
         if not isinstance(uri, str):
             raise Exception
@@ -26,7 +26,7 @@ class Gddp(object):
         float_extent = list(map(lambda coord: float(coord), extent))
 
         jvm = sc._gateway.jvm
-        rdd = jvm.geopyspark.netcdf.datasets.Gddp.rasters(uri, float_extent, int_days, sc._jsc.sc())
+        rdd = jvm.geopyspark.netcdf.datasets.Gddp.rasters(uri, float_extent, int_days, num_partitions, sc._jsc.sc())
         return TiledRasterLayer(LayerType.SPACETIME, rdd)
 
     @classmethod
