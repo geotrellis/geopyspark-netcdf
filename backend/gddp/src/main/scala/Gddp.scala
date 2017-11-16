@@ -90,6 +90,7 @@ object Gddp extends LazyLogging {
     netcdfUri: String,
     extent: java.util.ArrayList[Double],
     days: java.util.ArrayList[Int],
+    numPartitions: Integer,
     sc: SparkContext
   ) = {
     val List(xSliceStart, xSliceStop, ySliceStart, ySliceStop) = extentToIndices(extent)
@@ -120,8 +121,14 @@ object Gddp extends LazyLogging {
         case None => (days: Long) => SpaceTimeKey(0, 0, days)
       }
 
+    val partitionCount: Int =
+      numPartitions match {
+        case i: Integer => i
+        case null => sc.defaultParallelism
+      }
+
     val rdd: RDD[(SpaceTimeKey, MultibandTile)] =
-      sc.parallelize(days.toList)
+      sc.parallelize(days.toList, partitionCount)
         .mapPartitions({ itr =>
           val ncfile = open(netcdfUri)
           val tasmin = ncfile.getVariables().get(3)
