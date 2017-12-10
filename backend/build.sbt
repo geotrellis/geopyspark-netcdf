@@ -1,7 +1,7 @@
 import sbtassembly.PathList
 
 lazy val commonSettings = Seq(
-  version := "0.2.2",
+  version := "0.3.0",
   scalaVersion := "2.11.11",
   organization := "geopyspark.netcdf",
   test in assembly := {},

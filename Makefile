@@ -1,8 +1,8 @@
 PIP3 ?= pip3
 PYTHON3 ?= python3
-VERSION = 0.2.2
+VERSION = 0.3.0
 GEOPYSPARK_JAR = geotrellis-backend-assembly-$(VERSION).jar
-GEOPYSPARK_JAR_DIR ?= $(HOME)/.local/lib/python3.4/site-packages/geopyspark/jars/
+GEOPYSPARK_JAR_DIR ?= $(HOME)/.local/lib/python3.4/site-packages/geopyspark/jars
 CDM_JAR = netcdfAll-5.0.0-SNAPSHOT.jar
 WHEEL = dist/geopyspark_netcdf-$(VERSION)-py3-none-any.whl
 JAR = backend/gddp/target/scala-2.11/gddp-assembly-$(VERSION).jar
