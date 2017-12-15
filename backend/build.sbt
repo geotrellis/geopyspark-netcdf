@@ -39,14 +39,12 @@ lazy val commonSettings = Seq(
   },
   shellPrompt := { s => Project.extract(s).currentProject.id + " > " },
   resolvers  ++= Seq(
+    "LocationTech GeoTrellis Snapshots" at "https://repo.locationtech.org/content/repositories/geotrellis-snapshots",
+    "LocationTech GeoTrellis Releases" at "https://repo.locationtech.org/content/repositories/releases",
     Resolver.bintrayRepo("azavea", "maven"),
     Resolver.mavenLocal
   )
 )
 
-lazy val root = (project in file("."))
-  .settings(commonSettings: _*)
-
 lazy val gddp = (project in file("gddp"))
-  .dependsOn(root)
   .settings(commonSettings: _*)
