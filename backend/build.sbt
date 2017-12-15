@@ -39,6 +39,7 @@ lazy val commonSettings = Seq(
   },
   shellPrompt := { s => Project.extract(s).currentProject.id + " > " },
   resolvers  ++= Seq(
+    Resolver.bintrayRepo("azavea", "maven"),
     Resolver.mavenLocal
   )
 )
