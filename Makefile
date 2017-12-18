@@ -37,7 +37,7 @@ thredds-feature-s3-hdfs: archives/s3+hdfs.zip
 	unzip -qu $<
 
 archives/$(CDM_JAR): thredds-feature-s3-hdfs
-	(cd $< ; ./gradlew assemble)
+	(cd $< ; patch -p2 -s < ../patches/thredds-dependencies.diff ; ./gradlew assemble)
 	cp -f $</build/libs/$(CDM_JAR) $@
 endif
 
