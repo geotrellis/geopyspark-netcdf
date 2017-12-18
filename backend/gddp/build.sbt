@@ -1,4 +1,4 @@
-name := "gddp"
+name := "geopyspark-gddp"
 
 libraryDependencies ++= Seq(
   "org.locationtech.geotrellis" %% "geotrellis-backend"  % "0.3.0" % "provided",
