@@ -3,7 +3,8 @@ import sbtassembly.PathList
 lazy val commonSettings = Seq(
   version := "0.3.0",
   scalaVersion := "2.11.11",
-  organization := "geopyspark.netcdf",
+  organization := "org.locationtech.geotrellis",
+  licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
   test in assembly := {},
   scalacOptions ++= Seq(
     "-deprecation",
@@ -39,13 +40,24 @@ lazy val commonSettings = Seq(
   },
   shellPrompt := { s => Project.extract(s).currentProject.id + " > " },
   resolvers  ++= Seq(
+    "LocationTech GeoTrellis Snapshots" at "https://repo.locationtech.org/content/repositories/geotrellis-snapshots",
+    "LocationTech GeoTrellis Releases" at "https://repo.locationtech.org/content/repositories/releases",
+    Resolver.bintrayRepo("azavea", "maven"),
     Resolver.mavenLocal
   )
 )
 
-lazy val root = (project in file("."))
-  .settings(commonSettings: _*)
+lazy val publishSettings =
+  Seq(
+    bintrayOrganization := Some("azavea"),
+    bintrayRepository := "maven",
+    bintrayVcsUrl := Some("https://github.com/geotrellis/geopyspark-netcdf.git"),
+    publishMavenStyle := true,
+    publishArtifact in Test := false,
+    pomIncludeRepository := { _ => false},
+    homepage := Some(url("https://github.com/geotrellis/geopyspark-netcdf/"))
+  )
 
-lazy val gddp = (project in file("gddp"))
-  .dependsOn(root)
+lazy val gddp = Project("geopyspark-gddp", file("gddp"))
   .settings(commonSettings: _*)
+  .settings(publishSettings: _*)

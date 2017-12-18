@@ -1,0 +1,21 @@
+diff -ru thredds-feature-s3-hdfs/gradle/any/dependencies.gradle /home/jmcclain/local/src/geopyspark-netcdf/thredds-feature-s3-hdfs/gradle/any/dependencies.gradle
+--- a/thredds-feature-s3-hdfs/gradle/any/dependencies.gradle	2017-05-30 16:56:04.000000000 -0400
++++ b/thredds-feature-s3-hdfs/gradle/any/dependencies.gradle	2017-12-18 08:40:46.955972235 -0500
+@@ -11,7 +11,7 @@
+     jcenter()
+     mavenCentral()  // JCenter isn't quite a superset of Maven Central.
+     maven {
+-        url "https://artifacts.unidata.ucar.edu/content/repositories/unidata"
++        url "https://artifacts.unidata.ucar.edu/content/repositories/unidata-releases/"
+     }
+     maven {
+         url "https://artifacts.unidata.ucar.edu/content/repositories/unidata-3rdparty/"
+@@ -241,7 +241,7 @@
+ 
+ libraries["gwt-dev"] = "com.google.gwt:gwt-dev:${versions["gwt"]}"
+ 
+-libraries["threddsIso"] = "EDS:threddsIso:2.3.0-SNAPSHOT"
++libraries["threddsIso"] = "EDS:threddsIso:2.3.1"
+ 
+ libraries["Saxon-HE"] = "net.sf.saxon:Saxon-HE:9.7.0-8"
+ 
