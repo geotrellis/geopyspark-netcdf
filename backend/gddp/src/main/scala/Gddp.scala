@@ -20,6 +20,7 @@ import java.time.{LocalDateTime, ZonedDateTime, ZoneId}
 import ucar.nc2._
 
 import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 import scala.util.matching.Regex
 
 
@@ -77,7 +78,10 @@ object Gddp extends LazyLogging {
     val yWidth = ySliceStop - ySliceStart + 1
 
     val ncfile = open(netcdfUri)
-    val tasmin = ncfile.getVariables().get(3)
+    val tasmin = ncfile
+      .getVariables.asScala
+      .filter({ v => v.getFullName == "tasmin" || v.getFullName == "tasmax" || v.getFullName == "pr" })
+      .head
     val ucarType = tasmin.getDataType()
 
     val array = tasmin
@@ -111,9 +115,14 @@ object Gddp extends LazyLogging {
       }
 
     val ncfile = open(netcdfUri)
-    val tasmin = ncfile.getVariables().get(3)
-    val attribs = tasmin.getAttributes()
-    val nodata = attribs.get(0).getValues().getFloat(0)
+    val tasmin = ncfile
+      .getVariables.asScala
+      .filter({ v => v.getFullName == "tasmin" || v.getFullName == "tasmax" || v.getFullName == "pr" })
+      .head
+    val nodata = tasmin
+      .getAttributes.asScala
+      .filter({ v => v.getFullName == "_FillValue" })
+      .head.getValues.getFloat(0)
 
     val keyMaker: Long => SpaceTimeKey =
       baseZonedTime match {
@@ -131,7 +140,10 @@ object Gddp extends LazyLogging {
       sc.parallelize(days.toList, partitionCount)
         .mapPartitions({ itr =>
           val ncfile = open(netcdfUri)
-          val tasmin = ncfile.getVariables().get(3)
+          val tasmin = ncfile
+            .getVariables.asScala
+            .filter({ v => v.getFullName == "tasmin" || v.getFullName == "tasmax" || v.getFullName == "pr" })
+            .head
           val ucarType = tasmin.getDataType()
 
           itr.map({ t =>
@@ -187,15 +199,23 @@ object Gddp extends LazyLogging {
     }
 
     val ncfile = open(netcdfUri)
-    val tasmin = ncfile.getVariables().get(3)
-    val attribs = tasmin.getAttributes()
-    val nodata = attribs.get(0).getValues().getFloat(0)
+    val tasmin = ncfile
+      .getVariables.asScala
+      .filter({ v => v.getFullName == "tasmin" || v.getFullName == "tasmax" || v.getFullName == "pr" })
+      .head
+    val nodata = tasmin
+      .getAttributes.asScala
+      .filter({ v => v.getFullName == "_FillValue" })
+      .head.getValues.getFloat(0)
 
     val rdd: RDD[(SpatialKey, MultibandTile)] =
       sc.parallelize(List(day))
         .mapPartitions({ itr =>
           val ncfile = open(netcdfUri)
-          val tasmin = ncfile.getVariables().get(3)
+          val tasmin = ncfile
+            .getVariables.asScala
+            .filter({ v => v.getFullName == "tasmin" || v.getFullName == "tasmax" || v.getFullName == "pr" })
+            .head
           val ucarType = tasmin.getDataType()
 
           itr.map({ t =>
@@ -232,10 +252,14 @@ object Gddp extends LazyLogging {
     val rdd = sc.parallelize(days.toList)
       .mapPartitions({ itr =>
         val ncfile = open(netcdfUri)
-        val tasmin = ncfile.getVariables().get(3)
-        val attribs = tasmin.getAttributes()
-        val nodata = attribs.get(0).getValues().getFloat(0)
-        val ucarType = tasmin.getDataType()
+        val tasmin = ncfile
+          .getVariables.asScala
+          .filter({ v => v.getFullName == "tasmin" || v.getFullName == "tasmax" || v.getFullName == "pr" })
+          .head
+        val nodata = tasmin
+          .getAttributes.asScala
+          .filter({ v => v.getFullName == "_FillValue" })
+          .head.getValues.getFloat(0)
 
         itr.map({ t =>
           tasmin
