@@ -21,10 +21,6 @@ $(WHEEL): $(JAR)
 /tmp/%: archives/%
 	cp -f $^ $@
 
-ifdef CDM_JAR_DIR
-archives/$(CDM_JAR):
-	cp -f $(CDM_JAR_DIR)/$(CDM_JAR) $@
-else
 archives/s3+hdfs.zip:
 	curl -L "https://github.com/Unidata/thredds/archive/feature/s3+hdfs.zip" -o $@
 
@@ -37,7 +33,6 @@ archives/$(CDM_JAR): archives/s3+hdfs.zip
 	unzip -qu $<
 	(cd $< ; patch -p2 -s < ../patches/thredds-dependencies.diff ; ./gradlew assemble)
 	cp -f $</build/libs/$(CDM_JAR) $@
-endif
 
 $(JAR): /tmp/$(CDM_JAR)
 	(cd backend ; ./sbt "project geopyspark-gddp" assembly)
