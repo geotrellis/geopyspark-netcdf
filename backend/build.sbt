@@ -1,7 +1,7 @@
 import sbtassembly.PathList
 
 lazy val commonSettings = Seq(
-  version := "0.3.0",
+  version := "0.3.0-postvp",
   scalaVersion := "2.11.11",
   organization := "org.locationtech.geotrellis",
   licenses := Seq("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
